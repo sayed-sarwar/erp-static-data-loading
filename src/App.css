@@ -1,0 +1,124 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+body {
+  font-family: "Lato", sans-serif;
+}
+#sidebarcontainer {
+  background: rgba(249, 255, 252, 1);
+  border: none;
+  /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
+}
+.c-change {
+  background: rgba(0, 67, 70, 0.05);
+  border-left: 8px solid rgba(3, 164, 89, 1);
+  font-weight: 700;
+  color: rgba(3, 164, 89, 1);
+  padding-left: 5px;
+  margin-top: 14px;
+}
+.custom-lay {
+  padding-top: 16px;
+  padding-left: 16px;
+}
+.c-change span {
+  color: rgba(3, 164, 89, 1);
+}
+.f-size span {
+  font-family: "Lato";
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 100%;
+}
+.f-f-size span {
+  font-family: "Lato";
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 100%;
+  padding: 15px 0;
+}
+.ct-padding {
+  padding: 15px 5px;
+}
+.no-class {
+  border-left: 8px solid transparent;
+  padding-left: 5px;
+  margin-top: 14px;
+}
+.h48px {
+  height: 48px;
+  width: 100%;
+  background: rgba(249, 255, 252, 1);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  padding-left: 20px;
+}
+.itemdes {
+  font-family: "Lato";
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0px;
+  padding-bottom: 37px;
+  padding-top: 23px;
+  color: rgba(74, 74, 74, 1);
+}
+.custom-tab .text-muted-foreground button {
+  display: block;
+  /* border-bottom: 4px solid transparent; */
+  font-family: "Lato";
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  text-align: center;
+}
+
+.custom-accordion {
+  padding: 8px 20px;
+  box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid rgba(231, 231, 231, 1);
+  margin-bottom: 10px;
+}
+.custom-accordion h3 span {
+  font-size: 16px;
+  padding: 10px 0;
+  font-weight: 600;
+  color: rgba(64, 64, 64, 1);
+  font-family: "Lato";
+}
+.ct-accordionp {
+  box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.list-i .f-one {
+  font-family: "Lato";
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0px;
+  color: rgba(124, 124, 124, 1);
+}
+
+.list-i .f-two {
+  font-family: "Lato";
+  font-weight: 400;
+  /* font-style: Regular; */
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0px;
+  padding-top: 6px;
+}
+.list-i {
+  padding-top: 10px;
+}
+.gap-custom {
+  padding-bottom: 20px;
+  padding-top: 20px;
+  border-bottom: 2px solid rgba(236, 236, 236, 1);
+  padding-left: 5px;
+}
+.custom-cl-menu {
+  padding-left: 15px;
+}

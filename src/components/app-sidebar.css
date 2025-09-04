@@ -1,0 +1,10 @@
+.sidebar-menu-item-group {
+  position: relative;
+}
+.sidebar-submenu {
+  display: none;
+}
+.sidebar-menu-item-group:hover .sidebar-submenu,
+.sidebar-menu-item-group:focus-within .sidebar-submenu {
+  display: block;
+}
