@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TemplateMatching from "@/template/templates";
+// import TemplateMatching from "@/template/templates";
 
 const Tab = (props: any) => {
   console.log(props.tabData.item);
@@ -16,7 +16,7 @@ const Tab = (props: any) => {
       {props.tabData.item &&
         props.tabData.item.map((item: any, index: number) => (
           <TabsContent key={index} value={item.value}>
-            <TemplateMatching template={item.template} data={item} />
+            {/* <TemplateMatching template={item.template} data={item} /> */}
           </TabsContent>
         ))}
     </Tabs>

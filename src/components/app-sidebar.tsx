@@ -7,6 +7,7 @@ import {
   SidebarMenuAction,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,14 +21,16 @@ import { MoreHorizontal } from "lucide-react";
 
 // Define the type for menu items
 interface MenuItem {
-  submenu: MenuItem[] | undefined;
+  submenu?: MenuItem[];
   name: string;
   path?: string;
+  url?: string;
   iconLink?: string;
   icon?: boolean;
   hasChildren?: boolean;
   children?: MenuItem[];
   item?: MenuItem[];
+  subItems?: any;
 }
 
 // Arrow icon component
@@ -52,6 +55,7 @@ const ArrowIcon = ({ isExpanded }: { isExpanded: boolean }) => (
 
 export function AppSidebar() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { jsonData } = useSelector(
     (state: RootState) => state.UserData || { jsonData: {} }
   );
@@ -73,6 +77,12 @@ export function AppSidebar() {
   const handleclickitem = (item: MenuItem) => {
     setActiveItem(item.name); // Set the clicked item as active
     dispatch(updateTemplateData(item));
+
+    // Navigate to the URL if it exists
+    const url = item.path || item.url;
+    if (url) {
+      navigate(url);
+    }
   };
 
   // Render main app items with collapsible functionality

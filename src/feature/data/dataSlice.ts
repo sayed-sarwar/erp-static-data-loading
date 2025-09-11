@@ -1,22 +1,24 @@
 import { API_BASE_URL } from '@/utils/const'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import data from "../../../db.json";
+import data from "../../../data1.json";
 import axios from 'axios'
 
 export interface Userdata {
   value: any[]
   status: 'idle' | 'loading' | 'succeeded' | 'failed' // Track API call status
   jsonData: {},
-  selectedTemplatedata:{}
+  selectedTemplatedata:{},
+  selectedItem?: any,
 }
 
 const initialState: Userdata = {
   value: [],
   status: 'idle',
-  jsonData: {},
-  selectedTemplatedata:{} 
-  
+  jsonData: data, // Initialize with data directly
+  selectedTemplatedata:{},
+  selectedItem: undefined,
+
 }
 
 // Async thunk for API call
@@ -31,6 +33,13 @@ export const Userdataslice = createSlice({
   reducers: {
     updateTemplateData: (state, action: PayloadAction<any>) => {
       state.selectedTemplatedata = action.payload;
+      console.log("Selected Template Data:", state.selectedTemplatedata);
+    },
+    setSelectedItem: (state, action: PayloadAction<any | undefined>) => {
+      state.selectedItem = action.payload;
+      if (action.payload) {
+        console.log("Selected Item:", action.payload);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -51,4 +60,4 @@ export const Userdataslice = createSlice({
 
 export default Userdataslice.reducer
 
-export const { updateTemplateData } = Userdataslice.actions
+export const { updateTemplateData, setSelectedItem } = Userdataslice.actions
