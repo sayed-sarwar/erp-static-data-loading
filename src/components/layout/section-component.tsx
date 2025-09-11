@@ -1,5 +1,5 @@
-import CardItem from "@/displaycomponent/card";
-import List from "@/displaycomponent/list";
+import CardItem from "@/components/data-display/card";
+import List from "@/components/data-display/list";
 
 const SectionComponent = (props: any) => {
   console.log("SectionComponent props:", props.data.data);

@@ -1,7 +1,7 @@
 // componentsMap.ts
 
-import Page from "../page/page";
-import SubPage from "../page/subpage";
+import Page from "../pages/page";
+import SubPage from "../pages/subpage";
 
 export const componentMap: Record<string, React.ComponentType<any>> = {
   Page,

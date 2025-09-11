@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/app/store";
-import { fetchData } from "@/feature/data/dataSlice";
+import { fetchData } from "@/features/data/dataSlice";
 
 interface SubPageProps {
   menuItem?: any;

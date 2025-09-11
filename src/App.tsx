@@ -3,7 +3,7 @@ import "./App.css";
 // import DataComponent from "./page/data";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchData } from "./feature/data/dataSlice";
+import { fetchData } from "./features/data/dataSlice";
 
 function App() {
   const dispatch = useDispatch();

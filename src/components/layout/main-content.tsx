@@ -1,7 +1,7 @@
 import React from "react";
-import TopBar from "./tobbar";
-import TabNavigation from "./tabnavigation";
-import Page from "@/page/page";
+import TopBar from "./toolbar";
+import TabNavigation from "../navigation/tab-navigation";
+import Page from "@/pages/page";
 // import AccountsTable from "./AccountsTable";
 
 const MainContent: React.FC = () => {

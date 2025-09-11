@@ -19,7 +19,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/app/store";
 import { useNavigate } from "react-router-dom";
-import { setSelectedItem } from "@/feature/data/dataSlice";
+import { setSelectedItem } from "@/features/data/dataSlice";
 
 interface submenuProps {
   isVisible: boolean;
