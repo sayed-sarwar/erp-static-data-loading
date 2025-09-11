@@ -17,12 +17,12 @@ import {
   Menu,
   ArrowRight,
 } from "lucide-react";
-import type { NavigationItem } from "./types";
+import type { NavigationItem } from "../../types";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/app/store";
-import { updateTemplateData } from "@/feature/data/dataSlice";
-import { setSelectedItem } from "@/feature/data/dataSlice";
-import data from "../../data1.json";
+import { updateTemplateData } from "@/features/data/dataSlice";
+import { setSelectedItem } from "@/features/data/dataSlice";
+import data from "../../../data1.json";
 
 interface SidebarProps {
   isCollapsed: boolean;

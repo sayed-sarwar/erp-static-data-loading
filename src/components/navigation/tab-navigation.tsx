@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/app/store";
 import { useNavigate, useLocation } from "react-router-dom";
-import { setSelectedItem } from "@/feature/data/dataSlice";
+import { setSelectedItem } from "@/features/data/dataSlice";
 
 const TabNavigation: React.FC = () => {
   const navigate = useNavigate();

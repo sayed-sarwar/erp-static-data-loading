@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AccordionList from "./accordion";
+import AccordionList from "../data-display/accordion";
 
 const SubTab = (props: any) => {
   return (

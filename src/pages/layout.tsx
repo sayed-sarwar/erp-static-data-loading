@@ -1,7 +1,7 @@
-import Sidebar from "@/components/sidebar";
+import Sidebar from "@/components/navigation/sidebar";
 import { useState } from "react";
-import MainContent from "@/components/maincontent";
-import Submenu from "@/components/submenu";
+import MainContent from "@/components/layout/main-content";
+import Submenu from "@/components/navigation/submenu";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
