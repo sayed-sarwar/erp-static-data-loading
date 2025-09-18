@@ -4,20 +4,12 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarMenuAction,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // Adjust the path as needed
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../../app/store";
 import { updateTemplateData } from "../../features/data/dataSlice";
-import { MoreHorizontal } from "lucide-react";
 
 // Define the type for menu items
 interface MenuItem {

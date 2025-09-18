@@ -1,31 +1,22 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AccordionList from "../data-display/accordion";
 
-const SubTab = (props: any) => {
+
+const SubTabs = (props: any) => {
+  console.log("SubTabs props:", props);
   return (
-    <Tabs defaultValue="account" className="custom-tab ctitems-start">
+    <Tabs defaultValue="account" className="w-[400px]">
       <TabsList>
-        {/* {props.data.data.subItems?.TabMenu &&
-          props.data.data.subItems?.TabMenu.map((item: any, index: number) => (
-            <TabsTrigger key={index} value={item.value}>
-              {item.name}
-            </TabsTrigger>
-          ))} */}
+        {props.data.map((item: any) => (
+          <TabsTrigger key={item.id} value={item.id}>
+            {item.label}
+          </TabsTrigger>
+        ))}
       </TabsList>
-      {props.data.data.subItems?.TabMenu &&
-        props.data.data.subItems?.TabMenu.map((item: any, index: number) => {
-          return (
-            <TabsContent key={index} value={item.value}>
-              {/* <div className="ct-accordionp w-[1000px]">
-                {item.sub_sub_Items?.Accordionitem &&
-                  item.sub_sub_Items?.Accordionitem.map((item: any) => (
-                    <AccordionList item={item}></AccordionList>
-                  ))}
-              </div> */}
-            </TabsContent>
-          );
-        })}
+      <TabsContent value="account">
+        Make changes to your account here.
+      </TabsContent>
+      <TabsContent value="password">Change your password here.</TabsContent>
     </Tabs>
   );
 };
-export default SubTab;
+export default SubTabs;

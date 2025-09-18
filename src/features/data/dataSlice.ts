@@ -4,11 +4,20 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import data from "../../../data1.json";
 import axios from 'axios'
 
+export interface TemplateData {
+  label: string;
+  id: string;
+  url: string;
+  active: boolean;
+  description: string;
+  value: string;
+}
+
 export interface Userdata {
   value: any[]
   status: 'idle' | 'loading' | 'succeeded' | 'failed' // Track API call status
   jsonData: {},
-  selectedTemplatedata:{},
+  selectedTemplatedata: TemplateData | {},
   selectedItem?: any,
 }
 
@@ -16,7 +25,7 @@ const initialState: Userdata = {
   value: [],
   status: 'idle',
   jsonData: data, // Initialize with data directly
-  selectedTemplatedata:{},
+  selectedTemplatedata: {},
   selectedItem: undefined,
 
 }

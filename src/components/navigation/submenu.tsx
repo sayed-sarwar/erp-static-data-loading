@@ -79,7 +79,7 @@ const Submenu: React.FC<submenuProps> = ({
         return (
           <div
             key={item.id}
-            className="px-4 py-2 hover:bg-green-50 hover:text-[#03A459] cursor-pointer transition-colors flex items-center space-x-3"
+            className="px-4 py-2 hover:text-[var(--color-bg)] hover:text-[var-(color-bg)] cursor-pointer transition-colors flex items-center space-x-3"
             onClick={() => {
               // Only set selected item; keep tabs array intact
               dispatch(setSelectedItem(item));

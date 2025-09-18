@@ -5,6 +5,19 @@ export function generateRoutes(config: any, routes: any = [], parentPath: string
     routes = [];
   }
 
+  const joinPaths = (base: string, path: string): string => {
+    const b = base || "";
+    const pRaw = path || "";
+    if (!b && !pRaw) return "/";
+    // Respect absolute child URLs from JSON
+    if (pRaw.startsWith("/")) return pRaw;
+    const p = pRaw.replace(/^\/+/, "");
+    if (!b) return `/${p}`;
+    const cleanedBase = b.endsWith("/") ? b.slice(0, -1) : b;
+    const joined = `${cleanedBase}/${p}`;
+    return joined.startsWith("/") ? joined : `/${joined}`;
+  };
+
   // Handle navigation array structure from data1.json
   if (config && config.navigation && Array.isArray(config.navigation)) {
     config.navigation.forEach((navItem: any) => {
@@ -14,56 +27,38 @@ export function generateRoutes(config: any, routes: any = [], parentPath: string
 
   // Handle regular item with URL
   if (config && config.url) {
-    console.log("Generating route for URL:", config.url, "Type:", config.type);
+    const fullPath = joinPaths(parentPath, config.url);
+    console.log("Generating route for URL:", fullPath, "Type:", config.type);
 
-    // Determine component based on type field from data.json
-    let component = componentMap.Default;
-
-    if (config.type) {
-      // Use type field from data.json if it exists
-      component = componentMap[config.type] || componentMap.Default;
+    // Prefer explicit type when mapped; fallback to Page only
+    let component: any | undefined = undefined;
+    if (config.type && componentMap[config.type]) {
+      component = componentMap[config.type];
     } else {
-      // Fallback to property-based logic if no type specified
-      // Use PageLayout for top-level items with children
-      if (config.children && Array.isArray(config.children) && config.children.length > 0) {
-        component = componentMap.PageLayout;
-      }
-      // Use CustomPage for items with submenu
-      else if (config.submenu && Array.isArray(config.submenu) && config.submenu.length > 0) {
-        component = componentMap.CustomPage;
-      }
-      // Use SubPage for items with data or subItems
-      else if ((config.data && Array.isArray(config.data)) || config.subItems) {
-        component = componentMap.SubPage;
-      }
-      // Use CustomPage for items with item array
-      else if (config.item && Array.isArray(config.item) && config.item.length > 0) {
-        component = componentMap.CustomPage;
-      }
-      // Fallback to CustomPage for other items
-      else {
-        component = componentMap.CustomPage;
-      }
+      component = componentMap.Page;
     }
 
     routes.push({
-      path: config.url,
-      component: component,
-      menuItem: config, // Pass the full menu item data
+      path: fullPath,
+      component,
+      menuItem: config,
     });
+
+    // Update parentPath for descendants when this node has a URL
+    parentPath = fullPath;
   }
 
   // Handle children array (for both old and new data structures)
   if (config && config.children && Array.isArray(config.children)) {
-    config.children.forEach((child: any) => generateRoutes(child, routes, config.url || parentPath));
+    config.children.forEach((child: any) => generateRoutes(child, routes, parentPath));
   }
 
   if (config && config.submenu && Array.isArray(config.submenu)) {
-    config.submenu.forEach((child: any) => generateRoutes(child, routes, config.url || parentPath));
+    config.submenu.forEach((child: any) => generateRoutes(child, routes, parentPath));
   }
 
   if (config && config.item && Array.isArray(config.item)) {
-    config.item.forEach((child: any) => generateRoutes(child, routes, config.url || parentPath));
+    config.item.forEach((child: any) => generateRoutes(child, routes, parentPath));
   }
 
   if (
@@ -72,7 +67,14 @@ export function generateRoutes(config: any, routes: any = [], parentPath: string
     Array.isArray(config.subItems.TabMenu)
   ) {
     config.subItems.TabMenu.forEach((child: any) =>
-      generateRoutes(child, routes, config.url || parentPath)
+      generateRoutes(child, routes, parentPath)
+    );
+  }
+
+  // Handle page array present under subpages or any node
+  if (config && config.page && Array.isArray(config.page)) {
+    config.page.forEach((child: any) =>
+      generateRoutes(child, routes, parentPath)
     );
   }
 

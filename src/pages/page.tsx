@@ -3,7 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/app/store";
 import { fetchData } from "@/features/data/dataSlice";
 import data from "../../data.json";
+import Sub from "../../sub.json";
 import SectionComponent from "@/components/layout/section-component";
+import SubPage from "./subpage";
+import ComponentChecker from "@/components/componentchecker";
+import SubNav from "@/components/navigation/subnav";
+import SubTabs from "@/components/navigation/subtab";
+import Navdata from "@/components/navdata";
+
 interface PageProps {
   menuItem?: any;
 }
@@ -15,33 +22,13 @@ const Page = ({ menuItem }: PageProps) => {
   );
 
   useEffect(() => {
-    // Make API call when component mounts
     dispatch(fetchData() as any);
   }, [dispatch]);
 
   return (
     <div>
-      {/* <h2>{selectedItem?.url || "Generic Page"}</h2> */}
-
-      {/* {menuItem?.description && (
-        <p className="mb-4 text-gray-600">{menuItem.description}</p>
-      )}
-
-      {menuItem?.data && (
-        <div className="mb-4">
-          <h3>Page Data:</h3>
-          <pre className="bg-gray-100 p-2 rounded text-sm overflow-auto max-h-60">
-            {JSON.stringify(menuItem.data, null, 2)}
-          </pre>
-        </div>
-      )} */}
-
       {selectedItem && (
         <div className="mt-4">
-          {/* <h3 className="font-semibold mb-2">Selected Item</h3> */}
-          {/* <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
-            {JSON.stringify(selectedItem, null, 2)}
-          </pre> */}
           {selectedItem &&
             selectedItem.url.includes("/accounting/chart-of-accounts") &&
             data &&
@@ -52,6 +39,16 @@ const Page = ({ menuItem }: PageProps) => {
                 <SectionComponent data={item} />
               </div>
             ))}
+
+          {selectedItem &&
+            selectedItem.url.includes("/accounting/journal-entry") && (
+              <div>
+                <SubNav data={Sub?.TabMenu} />
+                <Navdata />
+                {/* <div className="px-6 py-4">{<SubPage />}</div> */}
+              </div>
+            )}
+
           {/* {selectedItem &&
             !selectedItem.url.includes("/accounting/chart-of-accounts") && (
               <SectionComponent data={data} />

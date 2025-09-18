@@ -15,7 +15,6 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
-  ArrowRight,
 } from "lucide-react";
 import type { NavigationItem } from "../../types";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,6 +22,7 @@ import type { RootState, AppDispatch } from "@/app/store";
 import { updateTemplateData } from "@/features/data/dataSlice";
 import { setSelectedItem } from "@/features/data/dataSlice";
 import data from "../../../data1.json";
+import { useRef } from "react";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -45,6 +45,39 @@ const Sidebar: React.FC<SidebarProps> = ({
     (state: RootState) => state.UserData || { jsonData: {} }
   );
   const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
+  const hoverTimeoutRef = useRef<number | null>(null);
+  const hoverPositionRef = useRef<{ x: number; y: number } | null>(null);
+
+  // Helper to create stable IDs based on available fields
+  const createStableId = (item: any, prefix: string = "nav"): string => {
+    const base = `${item.id || item.label || item.name || "item"}-${
+      item.url || item.path || "nou"
+    }`
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-_]/g, "");
+    return `${prefix}-${base}`;
+  };
+
+  const applyStableIds = (items: any[]): NavigationItem[] => {
+    const mapItem = (item: any): NavigationItem => {
+      const withId: NavigationItem = {
+        id: item.id || createStableId(item),
+        label: item.label || item.name,
+        icon: item.icon,
+        isActive: item.isActive || false,
+        isExpanded: item.isExpanded || false,
+        url: item.url,
+        children: item.children
+          ? item.children.map((c: any) => mapItem(c))
+          : undefined,
+        page: item.page,
+      };
+      return withId;
+    };
+    return items.map(mapItem);
+  };
 
   // Function to find and expand menus based on current route
   const expandMenusForCurrentRoute = (
@@ -87,23 +120,23 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // Update navigation items when jsonData changes
   useEffect(() => {
-    console.log("Sidebar jsonData:", jsonData);
+    // console.log("Sidebar jsonData:", jsonData);
     let rawItems: NavigationItem[] = [];
 
     if (jsonData && (jsonData as any).navigation) {
-      console.log("Setting navigation items:", (jsonData as any).navigation);
-      rawItems = (jsonData as any).navigation;
+      // console.log("Setting navigation items:", (jsonData as any).navigation);
+      rawItems = applyStableIds((jsonData as any).navigation);
     } else if (jsonData && (jsonData as any).children) {
       // Fallback for old data structure
       console.log("Using children fallback:", (jsonData as any).children);
-      rawItems = (jsonData as any).children;
+      rawItems = applyStableIds((jsonData as any).children);
     } else if (data && data.navigation) {
       // Direct fallback to imported data - transform to match NavigationItem interface
       console.log("Using direct data fallback:", data.navigation);
 
       // Recursive function to transform nested data
       const transformItem = (item: any): NavigationItem => ({
-        id: item.id || `nav-${Math.random()}`,
+        id: item.id || createStableId(item),
         label: item.label || item.name,
         icon: item.icon,
         isActive: item.isActive || false,
@@ -159,7 +192,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     setNavigationItems((items) => toggleItem(items));
   };
 
-  const setActive = (itemId: string, parentId?: string, itemData?: any) => {
+  const setActive = (itemId: string, itemData?: any) => {
     const setActiveItem = (items: NavigationItem[]): NavigationItem[] => {
       return items.map((item) => {
         if (item.id === itemId) {
@@ -214,7 +247,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div
           className={`mx-2 mb-1 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-between group ${
             item.isActive
-              ? "bg-green-50 text-[#03A459] border border-green-200"
+              ? "bg-green-50 text-[var(--color-bg)] border border-[var(--color-bg)]"
               : "hover:bg-gray-100 text-gray-700"
           }`}
           style={{ paddingLeft: `${12 + paddingLeft}px` }}
@@ -223,33 +256,65 @@ const Sidebar: React.FC<SidebarProps> = ({
               toggleExpanded(item.id);
               if (hasPageChildren) {
                 // dispatch page array to redux for submenu consumption
-                dispatch(updateTemplateData(item.page));
+                if (Array.isArray(item.page)) {
+                  dispatch(
+                    updateTemplateData(
+                      item.page.map((p: any) => ({
+                        ...p,
+                        url:
+                          typeof p.url === "string" &&
+                          !p.url.startsWith("/") &&
+                          item.url
+                            ? `${item.url.replace(/\/$/, "")}/${p.url.replace(
+                                /^\//,
+                                ""
+                              )}`
+                            : p.url,
+                      }))
+                    )
+                  );
+                }
                 // clear selected item until a submenu/tab is chosen
                 dispatch(setSelectedItem(undefined));
               }
             } else {
-              setActive(item.id, undefined, item);
+              setActive(item.id, item);
               dispatch(setSelectedItem(item));
             }
           }}
           onMouseEnter={(e) => {
             if (hasPageChildren) {
-              // ensure submenu data is available and show submenu near the item
-              dispatch(updateTemplateData(item.page));
-              dispatch(setSelectedItem(undefined));
-              handleChartAccountsHover(e as unknown as React.MouseEvent, true);
+              // schedule delayed submenu show
+              const rect = (
+                e.currentTarget as HTMLElement
+              ).getBoundingClientRect();
+              hoverPositionRef.current = { x: rect.right + 10, y: rect.top };
+              if (hoverTimeoutRef.current) {
+                clearTimeout(hoverTimeoutRef.current);
+              }
+              hoverTimeoutRef.current = window.setTimeout(() => {
+                dispatch(updateTemplateData(item.page));
+                dispatch(setSelectedItem(undefined));
+                if (hoverPositionRef.current) {
+                  onChartAccountsHover(true, hoverPositionRef.current);
+                }
+              }, 300);
             }
           }}
           onMouseLeave={(e) => {
             if (hasPageChildren) {
-              handleChartAccountsHover(e as unknown as React.MouseEvent, false);
+              if (hoverTimeoutRef.current) {
+                clearTimeout(hoverTimeoutRef.current);
+                hoverTimeoutRef.current = null;
+              }
+              onChartAccountsHover(false);
             }
           }}
         >
           <div className="flex items-center space-x-3">
             <div
               className={`${
-                item.isActive ? "text-[#03A459]" : "text-gray-500"
+                item.isActive ? "text-[var(color-bg)]" : "text-gray-500"
               }`}
             >
               {getIcon(item.icon)}
@@ -259,7 +324,11 @@ const Sidebar: React.FC<SidebarProps> = ({
 
           {!isCollapsed && hasChildren && (
             <div>
-              {item.isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              {item.isExpanded ? (
+                <ChevronDown size={16} />
+              ) : (
+                <ChevronRight size={16} />
+              )}
             </div>
           )}
         </div>
@@ -283,7 +352,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-b border-gray-200 flex items-center justify-between">
         {!isCollapsed && (
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-[#03A459] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[var(--color-bg)] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">M</span>
             </div>
             <span className="font-semibold text-gray-900">Mukut</span>
@@ -291,14 +360,16 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
         <button
           onClick={onToggle}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:[var(color-bg)] rounded-lg transition-colors"
         >
           <Menu size={18} />
         </button>
       </div>
 
       <nav className="flex-1 py-4">
-        {navigationItems.map((item) => renderMenuItem(item))}
+        {navigationItems.map((item) => (
+          <React.Fragment key={item.id}>{renderMenuItem(item)}</React.Fragment>
+        ))}
       </nav>
     </div>
   );

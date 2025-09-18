@@ -1,9 +1,17 @@
 import Sidebar from "@/components/navigation/sidebar";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/app/store";
 import { useState } from "react";
 import MainContent from "@/components/layout/main-content";
 import Submenu from "@/components/navigation/submenu";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const theme = useSelector((state: RootState) => state.theme.currentTheme);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [submenuVisible, setSubmenuVisible] = useState(false);
   const [submenuPosition, setSubmenuPosition] = useState({ x: 0, y: 0 });
@@ -36,6 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         onMouseEnter={() => setSubmenuVisible(true)}
         onMouseLeave={() => setSubmenuVisible(false)}
       />
+      {/* {children} */}
     </div>
   );
 }

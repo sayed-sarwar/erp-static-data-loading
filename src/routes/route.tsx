@@ -4,7 +4,7 @@ import type { Key } from "react";
 import { generateRoutes } from "./generatesRoutes";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/app/store";
-import data from "../../data.json";
+import data from "../../data1.json";
 
 export default function RootRoute() {
   const { selectedTemplatedata } = useSelector(

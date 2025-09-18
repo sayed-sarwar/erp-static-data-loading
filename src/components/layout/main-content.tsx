@@ -1,6 +1,6 @@
 import React from "react";
 import TopBar from "./toolbar";
-import TabNavigation from "../navigation/tab-navigation";
+import TabNavigation from "../navigation/tabnavigation";
 import Page from "@/pages/page";
 // import AccountsTable from "./AccountsTable";
 

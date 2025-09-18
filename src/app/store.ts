@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import UserSlice from '../features/data/dataSlice'
+import themeReducer from '../features/theme/themeSlice'
 
 export const store = configureStore({
   reducer: {
     UserData: UserSlice,
+    theme: themeReducer,
   },
 })
 
