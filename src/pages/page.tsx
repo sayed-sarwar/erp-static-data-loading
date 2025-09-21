@@ -2,14 +2,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/app/store";
 import { fetchData } from "@/features/data/dataSlice";
-import data from "../../data.json";
-import Sub from "../../sub.json";
-import SectionComponent from "@/components/layout/section-component";
-import SubPage from "./subpage";
-import ComponentChecker from "@/components/componentchecker";
 import SubNav from "@/components/navigation/subnav";
-import SubTabs from "@/components/navigation/subtab";
-import Navdata from "@/components/navdata";
+import DataRenderer from "@/components/data-display/data-renderer";
+import Sub from "../../sub.json";
 
 interface PageProps {
   menuItem?: any;
@@ -29,39 +24,46 @@ const Page = ({ menuItem }: PageProps) => {
     <div>
       {selectedItem && (
         <div className="mt-4">
-          {selectedItem &&
-            selectedItem.url.includes("/accounting/chart-of-accounts") &&
-            data &&
-            data.map &&
-            data.map((item) => (
-              <div className="mb-6 p-6">
-                <h4 className="font-semibold">{item.name}</h4>
-                <SectionComponent data={item} />
-              </div>
-            ))}
-
+          {/* Special handling for journal entry with sub-navigation */}
           {selectedItem &&
             selectedItem.url.includes("/accounting/journal-entry") && (
               <div>
                 <SubNav data={Sub?.TabMenu} />
-                <Navdata />
-                {/* <div className="px-6 py-4">{<SubPage />}</div> */}
+                <div className="px-6 py-4">
+                  <DataRenderer selectedItem={selectedItem} />
+                </div>
               </div>
             )}
 
-          {/* {selectedItem &&
-            !selectedItem.url.includes("/accounting/chart-of-accounts") && (
-              <SectionComponent data={data} />
-            )} */}
+          {/* Default data rendering for all other pages */}
+          {selectedItem &&
+            !selectedItem.url.includes("/accounting/journal-entry") && (
+              <div className="px-6 py-4">
+                <DataRenderer selectedItem={selectedItem} />
+              </div>
+            )}
         </div>
       )}
 
       {!selectedItem ? (
-        <div className="mt-4 p-4 bg-blue-50 rounded">
+        <div className="mt-4 p-6 bg-blue-50 rounded-lg">
           <p>
-            This page is ready for content. Click on menu items to load their
-            data.
+            Welcome to the ERP System. Click on menu items in the sidebar to load their data and functionality.
           </p>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 bg-white rounded shadow">
+              <h3 className="font-semibold">Accounting</h3>
+              <p className="text-sm text-gray-600">Manage your financial data</p>
+            </div>
+            <div className="p-4 bg-white rounded shadow">
+              <h3 className="font-semibold">HR</h3>
+              <p className="text-sm text-gray-600">Employee management</p>
+            </div>
+            <div className="p-4 bg-white rounded shadow">
+              <h3 className="font-semibold">CRM</h3>
+              <p className="text-sm text-gray-600">Customer relationship management</p>
+            </div>
+          </div>
         </div>
       ) : null}
     </div>

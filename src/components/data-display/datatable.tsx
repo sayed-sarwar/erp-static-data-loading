@@ -28,7 +28,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 
 // Sample data for testing
-const data: Payment[] = [
+const defaultData: Payment[] = [
   {
     id: "1",
     amount: 100,
@@ -54,6 +54,7 @@ export type Payment = {
   amount: number;
   status: "pending" | "processing" | "success" | "failed";
   email: string;
+  description?: string;
 };
 
 export const columns: ColumnDef<Payment>[] = [
@@ -118,9 +119,17 @@ export const columns: ColumnDef<Payment>[] = [
     },
     size: 100,
   },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => (
+      <div className="max-w-[200px] truncate">{row.getValue("description") || "N/A"}</div>
+    ),
+    size: 200,
+  },
 ];
 
-export function DataTableDemo(props: { data: Payment[] }) {
+export function DataTableDemo(props: { data?: Payment[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -129,8 +138,26 @@ export function DataTableDemo(props: { data: Payment[] }) {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  // Transform data if it's not in the expected format
+  const transformedData = React.useMemo(() => {
+    if (!props.data) return defaultData;
+    
+    // If data is already in Payment format, use it
+    if (Array.isArray(props.data) && props.data.length > 0 && 'id' in props.data[0]) {
+      return props.data;
+    }
+    
+    // Transform other data formats to Payment format
+    return props.data.map((item: any, index: number) => ({
+      id: item.id || `item-${index}`,
+      amount: typeof item.amount === 'number' ? item.amount : Math.floor(Math.random() * 10000),
+      status: item.status || 'success',
+      email: item.email || `user${index}@example.com`,
+      description: item.description || item.name || `Item ${index + 1}`
+    }));
+  }, [props.data]);
   const table = useReactTable({
-    data: props.data || data, // Use props.data or fallback to sample data
+    data: transformedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

@@ -1,7 +1,5 @@
 import AccordionList from "../components/data-display/accordion";
-import CardItem from "../components/data-display/card";
-// import DataTableDemo from "../components/data-display/datatable";
-import Section from "../components/layout/section-component";
+import SectionComponent from "../components/layout/section-component";
 import SubNav from "./navigation/subnav";
 
 const ComponentChecker = (props: any) => {
@@ -9,20 +7,20 @@ const ComponentChecker = (props: any) => {
     switch (viewType) {
       case "Tab":
         return <SubNav data={data?.TabMenu} />;
-      // case "Accordion":
-      //   return <AccordionList item={data} />;
-      // case "card":
-      //   return <CardItem item={data} />;
-      // case "table":
-      //   return <DataTableDemo item={data} />;
-      // case "section":
-      //   return <Section item={data} />;
-
+      case "Accordion":
+        return <AccordionList item={data} />;
+      case "section":
+        return <SectionComponent data={data} />;
       default:
-        return <div>Select a view type.</div>;
+        return (
+          <div className="p-6 bg-gray-50 rounded-lg">
+            <p className="text-gray-500">Unknown view type: {viewType}</p>
+            <p className="text-sm text-gray-400 mt-2">Available types: Tab, Accordion, section</p>
+          </div>
+        );
     }
   };
-  console.log("ComponentChecker props:", props);
+  
   return <div>{getContent(props.data.display, props.data)}</div>;
 };
 
